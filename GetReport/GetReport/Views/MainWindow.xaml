@@ -1,0 +1,371 @@
+﻿<RibbonWindow
+    x:Class="GetReport.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GetReport.Views"
+    xmlns:localModels="clr-namespace:GetReport.Models"
+    xmlns:localVMs="clr-namespace:GetReport.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    Title="{Binding Title}"
+    Width="525"
+    Height="350"
+    md:DialogServiceViews.IsRegistered="True"
+    WindowState="Normal"
+    mc:Ignorable="d">
+    <Window.DataContext>
+        <localVMs:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <!--  Insert here your Data Templates  -->
+        <DataTemplate x:Key="ReportListTemplateAOSR">
+            <StackPanel />
+        </DataTemplate>
+
+    </Window.Resources>
+    <Window.InputBindings>
+        <!--  Example of Keyboard shortcuts  -->
+        <KeyBinding
+            Key="S"
+            Command="{Binding SaveCmd}"
+            Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding SaveAsCmd}" Gesture="Ctrl+Shift+S" />
+        <KeyBinding Command="{Binding OpenCmd}" Gesture="Ctrl+O" />
+        <KeyBinding Command="{Binding NewCmd}" Gesture="Ctrl+N" />
+        <KeyBinding Command="{Binding ExitCmd}" Gesture="Alt+F4" />
+    </Window.InputBindings>
+
+    <DockPanel>
+        <Ribbon
+            x:Name="RibbonWin"
+            Background="#FFF1F1F1"
+            BorderBrush="#FFC9C9C9"
+            DockPanel.Dock="Top"
+            SelectedIndex="0">
+            <!--  Help Pane, located at the right-hand side  -->
+            <Ribbon.HelpPaneContent>
+                <RibbonButton
+                    Command="{Binding ShowAboutDialogCmd}"
+                    Content="About"
+                    SmallImageSource="Images\info.png" />
+            </Ribbon.HelpPaneContent>
+            <!--  Quick Access Toolbar - located at the upper-left corner  -->
+            <Ribbon.QuickAccessToolBar>
+                <RibbonQuickAccessToolBar>
+                    <RibbonButton
+                        x:Name="Save"
+                        IsEnabled="{Binding SaveSessionE}"
+                        SmallImageSource="Images\save.png" />
+                    <!--<RibbonSplitButton x:Name ="Undo" SmallImageSource="Images\plus.png">
+                        <RibbonSplitMenuItem Header="Undo 1" />
+                        <RibbonSplitMenuItem Header="Undo 2" />
+                        <RibbonSplitMenuItem Header="Undo 3" />
+                    </RibbonSplitButton>
+                    <RibbonSplitButton x:Name="Redo" SmallImageSource="Images\plus.png" >
+                        <RibbonSplitMenuItem Header="Redo 1" />
+                        <RibbonSplitMenuItem Header="Redo 2" />
+                    </RibbonSplitButton>-->
+                </RibbonQuickAccessToolBar>
+            </Ribbon.QuickAccessToolBar>
+            <!--  Application Menu, located at the left-hand side (down arrow)  -->
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Background="Black" KeyTip="F">
+                    <RibbonApplicationMenuItem
+                        Command="{Binding NewCmd}"
+                        Header="New"
+                        InputGestureText="Ctrl+N"
+                        IsEnabled="{Binding NewSessionE}" />
+                    <RibbonApplicationMenuItem
+                        Command="{Binding OpenCmd}"
+                        Header="Open"
+                        InputGestureText="Ctrl+O"
+                        IsEnabled="{Binding OpenSessionE}" />
+                    <RibbonApplicationMenuItem
+                        Command="{Binding SaveCmd}"
+                        Header="Save"
+                        InputGestureText="Ctrl+S"
+                        IsEnabled="{Binding SaveSessionE}" />
+                    <RibbonApplicationMenuItem
+                        Command="{Binding SaveAsCmd}"
+                        Header="Save As"
+                        InputGestureText="Ctrl+Shift+S"
+                        IsEnabled="{Binding SaveAsSessionE}" />
+                    <RibbonSeparator />
+                    <MenuItem
+                        Command="{Binding ExitCmd}"
+                        Header="Exit"
+                        InputGestureText="Alt+F4" />
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            <!--  Ribbon Tab #1: Home  -->
+            <RibbonTab Header="Home" KeyTip="H">
+                <!--  Home  group  -->
+                <RibbonGroup x:Name="ClipboardGroup" Header="Home">
+                    <RibbonButton
+                        Command="{Binding NewCmd}"
+                        IsEnabled="{Binding NewSessionE}"
+                        KeyTip="N"
+                        Label="New"
+                        LargeImageSource="Images\document.png" />
+                    <RibbonButton
+                        Command="{Binding OpenCmd}"
+                        IsEnabled="{Binding OpenSessionE}"
+                        KeyTip="O"
+                        Label="Open"
+                        LargeImageSource="Images\folder.png" />
+                    <RibbonButton
+                        Command="{Binding SaveCmd}"
+                        IsEnabled="{Binding SaveSessionE}"
+                        KeyTip="S"
+                        Label="Save"
+                        LargeImageSource="Images\save.png" />
+                </RibbonGroup>
+                <!--  Employee And Payroll group  -->
+                <RibbonGroup x:Name="Report" Header="Report">
+                    <RibbonButton
+                        Command="{Binding AddReportToList}"
+                        IsEnabled="{Binding AddReportToListE}"
+                        KeyTip="A"
+                        Label="Add report"
+                        LargeImageSource="Images\plus.png" />
+                    <RibbonButton
+                        Command="{Binding DeleteReportFromList}"
+                        IsEnabled="{Binding DeleteReportFromListE}"
+                        KeyTip="D"
+                        Label="Delete selected"
+                        LargeImageSource="Images\delete.png" />
+                    <RibbonCheckBox x:Name="Expand1" />
+
+                    <RibbonButton
+                        Command="{Binding GetCreateNewReportInListCommand}"
+                        KeyTip="R"
+                        Label="Copy to Right"
+                        SmallImageSource="Images\Right.png" />
+                    <RibbonButton
+                        Command="{Binding GetCreateNewReportInListCommand}"
+                        KeyTip="R"
+                        Label="Copy to Right"
+                        SmallImageSource="Images\Left.png" />
+                </RibbonGroup>
+                <RibbonGroup x:Name="Export" Header="Publish">
+                    <RibbonButton
+                        KeyTip="P"
+                        Label="Publish"
+                        LargeImageSource="Images\word.png" />
+                    <RibbonButton
+                        Command="{Binding ShowDelegateListDialogCmd}"
+                        KeyTip="D"
+                        Label="Delegates"
+                        LargeImageSource="Images\briefcase.png" />
+                </RibbonGroup>
+            </RibbonTab>
+            <!--  Ribbon Tab #2:  -->
+            <!--<RibbonTab Header="Insert" KeyTip="I">
+                <RibbonButton
+                    KeyTip="V"
+                    Label="Employee"
+                    LargeImageSource="Images\plus.png" />
+            </RibbonTab>-->
+            <!--  Ribbon Tab #3:  -->
+            <!--<RibbonTab Header="PageLayout" KeyTip="L" />-->
+        </Ribbon>
+        <StackPanel>
+            <!--  Place here your content  -->
+            <ListView
+                x:Name="sessionReportList"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Top"
+                ItemsSource="{Binding ReportList}"
+                SelectedItem="{Binding SelectedReport}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel VerticalAlignment="Top" Orientation="Vertical">
+                            <Expander
+                                x:Name="Exp1"
+                                Header="Наименование объекта и реквизиты сторон:"
+                                IsExpanded="{Binding ElementName=Expand, Path=IsChecked}">
+                                <StackPanel>
+                                    <Label Content="Объект капитального строительства" />
+                                    <TextBox
+                                        x:Name="nameAndAddressOfObject"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=NameAndAddressOfObject, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Застройщик или технический заказчик" />
+                                    <TextBox
+                                        x:Name="requisitesOfConsumer"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=RequisitesOfConsumer, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Лицо, осуществляющее строительство" />
+                                    <TextBox
+                                        x:Name="requisitesOfPrimeContractor"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=RequisitesOfPrimeContractor, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Лицо, осуществляющее подготовку проекта" />
+                                    <TextBox
+                                        x:Name="requisitesOfProjectDeveloper"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=RequisitesOfProjectDeveloper, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Лицо, выполнившее работы" />
+                                    <TextBox
+                                        x:Name="requisitesOfBuilder"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=RequisitesOfBuilder, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Expander>
+                            <Label Content="Номер акта" />
+                            <TextBox x:Name="numberOfReport" Text="{Binding Path=NumberOfReport, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label Content="Дата подписания акта" />
+                            <DatePicker x:Name="dateOfPreparationOfReport" Text="{Binding Path=DateOfPreparationOfReport, Mode=TwoWay}" />
+                            <Expander
+                                x:Name="Exp2"
+                                Header="Представители сторон"
+                                IsExpanded="{Binding Path=Exp2IsExpanded}">
+                                <StackPanel>
+                                    <Label Content="Представитель застройщика или техзаказчика" />
+                                    <ComboBox
+                                        x:Name="delegateOfConsumer"
+                                        Margin="1"
+                                        ItemsSource="{Binding DelegateList}"
+                                        SelectedItem="{Binding DelegateOfConsumer}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBox IsEnabled="False" Text="{Binding Path=FirstName}" />
+                                                    <TextBox IsEnabled="False" Text="{Binding Path=LastName}" />
+                                                    <TextBox IsEnabled="False" Text="{Binding Path=Post}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <Label Content="Представитель лица, осуществляющего строительство" />
+                                    <ComboBox
+                                        x:Name="delegateOfPrimeContractor"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfPrimeContractor, Mode=TwoWay}" />
+                                    <Label Content="Представитель лица, осуществляющего строительство по вопросам строительного контроля" />
+                                    <ComboBox
+                                        x:Name="delegateOfBuildControlPrimeContractor"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfBuildControlPrimeContractor, Mode=TwoWay}" />
+                                    <Label Content="Представитель лица, осуществляющего подготовку проектной документации" />
+                                    <ComboBox
+                                        x:Name="delegateOfProjectDeveloper"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfProjectDeveloper, Mode=TwoWay}" />
+                                    <Label Content="Представитель лица, выполнившего работы, подлежащие освидетельствованию" />
+                                    <ComboBox
+                                        x:Name="delegateOfBuilder"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfBuilder, Mode=TwoWay}" />
+                                    <Label Content="Иные представители лиц" />
+                                    <ComboBox
+                                        x:Name="delegateOfOtherCompany"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfOtherCompany, Mode=TwoWay}" />
+                                    <Label Content="Иные представители лиц 2" />
+                                    <ComboBox
+                                        x:Name="delegateOfOtherCompany2"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfOtherCompany2, Mode=TwoWay}" />
+                                    <Label Content="Иные представители лиц 3" />
+                                    <ComboBox
+                                        x:Name="delegateOfOtherCompany3"
+                                        Margin="1,1"
+                                        SelectedItem="{Binding Path=DelegateOfOtherCompany3, Mode=TwoWay}" />
+                                </StackPanel>
+                            </Expander>
+                            <Expander
+                                x:Name="Exp3"
+                                Header="Основные данные"
+                                IsExpanded="{Binding Path=Exp3IsExpanded, Mode=OneWay}">
+                                <StackPanel>
+                                    <Label Content="К освидетельствованию предъявлены следующие работы" />
+                                    <TextBox
+                                        x:Name="workName"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=WorkName, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Работы выполнены в соответствии с разделами проектной документации" />
+                                    <TextBox
+                                        x:Name="projectTheWorkIncluded"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=ProjectTheWorkIncluded, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="При выполнении работ применены" />
+                                    <TextBox
+                                        x:Name="TheListOfMaterial"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=TheListOfMaterial, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Предъявлены документы, подтверждающие соответствие работ предъявляемым к ним требованиям" />
+                                    <TextBox
+                                        x:Name="TheListOfQuantityConsistDocs"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=TheListOfQuantityConsistDocs, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Дата начала работ" />
+                                    <DatePicker x:Name="dateOfWorkStart" Text="{Binding Path=TheDateOfWorkStart, Mode=TwoWay}" />
+                                    <Label Content="Дата окончания работ" />
+                                    <DatePicker x:Name="dateOfWorkEnding" Text="{Binding Path=TheDateOfWorkEnding, Mode=TwoWay}" />
+                                    <Label Content="Работы выполнены в соответствии" />
+                                    <TextBox
+                                        x:Name="listOfDocumentConsists"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=TheListOfDocumentConsists, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Разрешается производство последующих работ" />
+                                    <TextBox
+                                        x:Name="nextWorkIsAccepted"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=TheNextWorkIsAccepted, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                    <Label Content="Приложения" />
+                                    <TextBox
+                                        x:Name="annexes"
+                                        Margin="1,1"
+                                        HorizontalScrollBarVisibility="Auto"
+                                        Text="{Binding Path=Annexes, Mode=TwoWay}"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <StatusBar
+            Height="15"
+            VerticalAlignment="Bottom"
+            VerticalContentAlignment="Bottom"
+            DockPanel.Dock="Bottom">
+            <Label Content="StatusBar" />
+        </StatusBar>
+    </DockPanel>
+</RibbonWindow>

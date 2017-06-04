@@ -1,0 +1,65 @@
+﻿<Window
+    x:Class="GetReport.Views.DelegateList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:localVMs="clr-namespace:GetReport.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+    Title="DelegateList"
+    Width="900"
+    Height="600"
+    md:DialogServiceViews.IsRegistered="True"
+    WindowStyle="ToolWindow"
+    mc:Ignorable="d">
+    <Window.DataContext>
+        <localVMs:DelegateListViewModel />
+    </Window.DataContext>
+    <StackPanel>
+        <ToolBar x:Name="TBdelegateList">
+            <Button
+                VerticalAlignment="Bottom"
+                Command="{Binding SaveDLCmd}"
+                Content="Сохранить" />
+            <Button
+                VerticalAlignment="Bottom"
+                Command="{Binding OpenDLCmd}"
+                Content="Загрузить" />
+        </ToolBar>
+        <DataGrid
+            x:Name="listOfRepresentative"
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding Path=DelegateList, Mode=TwoWay}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="30"
+                    Binding="{Binding Path=CountNumber}"
+                    Header="№" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Path=FirstName}"
+                    Header="Имя" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Path=LastName}"
+                    Header="Фамилия" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Path=Patronymic}"
+                    Header="Отчество" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Path=Post}"
+                    Header="Должность" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Path=Company}"
+                    Header="Организация" />
+                <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Path=Order}"
+                    Header="Приказ" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</Window>
